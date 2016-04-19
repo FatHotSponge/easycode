@@ -11,7 +11,7 @@ class Calculator implements iCalculator
   	return $a - $b;
   }
   public function divide($a = 0, $b = 0){
-    return $b;
+    return $b; // ?
   }
   public function multiply($a, $b){
   	return $a * $b;
