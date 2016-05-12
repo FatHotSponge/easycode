@@ -19,6 +19,11 @@ $this->title = 'My blog';
         <p>
             <?= $post->text ?>
         </p>
+        <p>
+            <?php foreach ($post->tags as $tag): ?>
+                <?= Html::a($tag->name, ['site/index', 'tag_id' => $tag->id]) ?>
+            <?php endforeach; ?>
+        </p>
     </div>
     <hr />
 <?php endforeach; ?>

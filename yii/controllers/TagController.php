@@ -3,18 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Post;
+use app\models\Tag;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-use app\models\Tag;
-
 /**
- * PostController implements the CRUD actions for Post model.
+ * TagController implements the CRUD actions for Tag model.
  */
-class PostController extends Controller
+class TagController extends Controller
 {
     /**
      * @inheritdoc
@@ -32,13 +30,13 @@ class PostController extends Controller
     }
 
     /**
-     * Lists all Post models.
+     * Lists all Tag models.
      * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Post::find(),
+            'query' => Tag::find(),
         ]);
 
         return $this->render('index', [
@@ -47,7 +45,7 @@ class PostController extends Controller
     }
 
     /**
-     * Displays a single Post model.
+     * Displays a single Tag model.
      * @param integer $id
      * @return mixed
      */
@@ -59,22 +57,16 @@ class PostController extends Controller
     }
 
     /**
-     * Creates a new Post model.
+     * Creates a new Tag model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Post();
+        $model = new Tag();
 
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->save()) {
-                $tags = Yii::$app->request->post('tags');
-
-                $this->linkTagsToPost($tags, $model);
-
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -83,7 +75,7 @@ class PostController extends Controller
     }
 
     /**
-     * Updates an existing Post model.
+     * Updates an existing Tag model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -92,13 +84,7 @@ class PostController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->save()) {
-                $this->unlinkAllTagsFromPost($model);
-
-                $tags = Yii::$app->request->post('tags');
-                $this->linkTagsToPost($tags, $model);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -108,7 +94,7 @@ class PostController extends Controller
     }
 
     /**
-     * Deletes an existing Post model.
+     * Deletes an existing Tag model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -121,55 +107,18 @@ class PostController extends Controller
     }
 
     /**
-     * Finds the Post model based on its primary key value.
+     * Finds the Tag model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Post the loaded model
+     * @return Tag the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Post::findOne($id)) !== null) {
+        if (($model = Tag::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-
-    /**
-     * @param array $tags
-     *
-     * @return array
-     */
-    protected function _validateTags(array $tags) {
-        foreach ($tags as &$tag) {
-            $tag = strtolower(trim($tag));
-        }
-
-//        foreach ($tags as $key => $tag) {
-//            $tags[$key] = trim($tag);
-//        }
-
-        return $tags;
-    }
-
-    public function linkTagsToPost($tags, Post $post) {
-        $explodedTags = explode(',', $tags);
-        $validatedTags = $this->_validateTags($explodedTags);
-        foreach ($validatedTags as $tagName) {
-            $tag = Tag::find()->where(['name' => $tagName])->one();
-            if (!$tag) {
-                $tag = new Tag();
-                $tag->name = $tagName;
-                $tag->save();
-            }
-            $post->link('tags', $tag);
-        }
-    }
-
-    public function unlinkAllTagsFromPost(Post $post) {
-        foreach ($post->tags as $tag) {
-            $post->unlink('tags', $tag, true);
         }
     }
 }

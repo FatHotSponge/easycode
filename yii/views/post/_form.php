@@ -23,6 +23,10 @@ use app\models\Category;
 
     <?= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
 
+    Tags: <br />
+    <?= Html::input('textarea', 'tags', $model->isNewRecord ? '' : $model->getImplodedTags(), ['class'=>'form-control']) ?>
+    <br />
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
