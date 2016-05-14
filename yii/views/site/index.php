@@ -16,6 +16,10 @@ $this->title = 'My blog';
         <?= $post->title ?> | <?= $post->category->name ?>
         <br />
         <?= $post->date_creation ?>
+        <?php if ($post->img): ?>
+            <img src="<?= $post->getPathToImage() ?>" width="250px" height="250px">
+        <?php endif; ?>
+        <br />
         <p>
             <?= $post->text ?>
         </p>

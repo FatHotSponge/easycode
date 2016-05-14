@@ -11,10 +11,9 @@ use app\models\Category;
 /* @var $model app\models\Post */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
 <div class="post-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'category_id')->dropDownList(
         ArrayHelper::map(Category::find()->all(), 'id', 'name')
@@ -22,6 +21,7 @@ use app\models\Category;
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'img')->fileInput() ?>
 
     Tags: <br />
     <?= Html::input('textarea', 'tags', $model->isNewRecord ? '' : $model->getImplodedTags(), ['class'=>'form-control']) ?>

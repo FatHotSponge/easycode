@@ -40,7 +40,7 @@ AppAsset::register($this);
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
             ['label' => 'Category', 'url' => ['/category/index']],
-            ['label' => 'Posts', 'url' => ['/post/index']],
+            !Yii::$app->user->isGuest ? ['label' => 'Posts', 'url' => ['/post/index']] : '',
             ['label' => 'Tags', 'url' => ['/tag/index']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
@@ -48,7 +48,7 @@ AppAsset::register($this);
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    'Logout (' . Yii::$app->user->identity->name . ')',
                     ['class' => 'btn btn-link']
                 )
                 . Html::endForm()

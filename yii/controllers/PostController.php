@@ -8,6 +8,9 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+
+use yii\web\UploadedFile;
 
 use app\models\Tag;
 
@@ -28,6 +31,17 @@ class PostController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'view', 'create', 'update', 'delete'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'roles' => ['@']
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -37,8 +51,9 @@ class PostController extends Controller
      */
     public function actionIndex()
     {
+        $userId = Yii::$app->user->getId();
         $dataProvider = new ActiveDataProvider([
-            'query' => Post::find(),
+            'query' => Post::find()->where(['user_id' => $userId]),
         ]);
 
         return $this->render('index', [
@@ -68,12 +83,18 @@ class PostController extends Controller
         $model = new Post();
 
         if ($model->load(Yii::$app->request->post())) {
+            $model->user_id = Yii::$app->user->getIdentity()->getId();
+            $model->img = UploadedFile::getInstance($model, 'img');
+            $fileName = POST::PATH_TO_IMG_UPLOAD_FOLDER . $model->img->baseName . '.' . $model->img->extension;
+            $model->img->saveAs($fileName, false);
             if ($model->save()) {
                 $tags = Yii::$app->request->post('tags');
 
                 $this->linkTagsToPost($tags, $model);
 
                 return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                var_dump($model->getErrors());
             }
         } else {
             return $this->render('create', [
@@ -150,7 +171,7 @@ class PostController extends Controller
 //            $tags[$key] = trim($tag);
 //        }
 
-        return $tags;
+        return array_filter($tags);
     }
 
     public function linkTagsToPost($tags, Post $post) {
