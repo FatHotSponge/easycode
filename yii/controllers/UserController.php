@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Tag;
+use app\models\User;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -11,9 +11,9 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
 /**
- * TagController implements the CRUD actions for Tag model.
+ * UserController implements the CRUD actions for User model.
  */
-class TagController extends Controller
+class UserController extends Controller
 {
     /**
      * @inheritdoc
@@ -42,13 +42,13 @@ class TagController extends Controller
     }
 
     /**
-     * Lists all Tag models.
+     * Lists all User models.
      * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Tag::find(),
+            'query' => User::find(),
         ]);
 
         return $this->render('index', [
@@ -57,7 +57,7 @@ class TagController extends Controller
     }
 
     /**
-     * Displays a single Tag model.
+     * Displays a single User model.
      * @param integer $id
      * @return mixed
      */
@@ -69,13 +69,13 @@ class TagController extends Controller
     }
 
     /**
-     * Creates a new Tag model.
+     * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Tag();
+        $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -87,7 +87,7 @@ class TagController extends Controller
     }
 
     /**
-     * Updates an existing Tag model.
+     * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -106,7 +106,7 @@ class TagController extends Controller
     }
 
     /**
-     * Deletes an existing Tag model.
+     * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -119,15 +119,15 @@ class TagController extends Controller
     }
 
     /**
-     * Finds the Tag model based on its primary key value.
+     * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Tag the loaded model
+     * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Tag::findOne($id)) !== null) {
+        if (($model = User::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
