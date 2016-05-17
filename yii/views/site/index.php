@@ -13,7 +13,7 @@ $this->title = 'My blog';
 
 <?php foreach ($allPosts as $post): ?>
     <div>
-        <?= $post->title ?> | <?= $post->category->name ?>
+        <h3><?= $post->title ?></h3> | <?= $post->category->name ?>
         <br />
         <?= $post->date_creation ?>
         <?php if ($post->img): ?>
